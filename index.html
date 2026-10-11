@@ -4,181 +4,268 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Kiyono Game Studio</title>
-  <meta name="description" content="Kiyono Game Studio — games made by Satoshi Kiyono, inspired by classic Game Boy, SNES and N64 RPGs.">
+  <meta name="description" content="Kiyono Game Studio — games by Satoshi Kiyono, inspired by classic Game Boy, SNES and N64 RPGs.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #f6f1e7;
-      --panel: #fffdf8;
-      --ink: #2b2a33;
-      --muted: #5f5d6b;
-      --accent: #3b6fd8;
-      --accent-2: #e2574c;
-      --accent-3: #f2b632;
-      --border: #2b2a33;
-      --shadow: rgba(43, 42, 51, 0.18);
-    }
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #16151d;
-        --panel: #211f2b;
-        --ink: #f1eee6;
-        --muted: #b4b0c2;
-        --accent: #7aa2ff;
-        --accent-2: #ff7d70;
-        --accent-3: #ffcf5c;
-        --border: #f1eee6;
-        --shadow: rgba(0, 0, 0, 0.45);
-      }
+      --dark: #070d1f;        /* deep cobalt, almost black */
+      --dark-2: #0c1633;
+      --light: #ffffff;
+      --ink: #0b1226;
+      --muted-dark: #8e9ab8;  /* secondary text on dark */
+      --muted-light: #5b6378; /* secondary text on white */
+      --line-dark: rgba(255, 255, 255, 0.14);
+      --line-light: rgba(11, 18, 38, 0.14);
+      --accent: #3d6bff;
+      --font: "Arial Narrow", "Archivo Narrow", "Helvetica Neue", Arial, sans-serif;
     }
 
     * { box-sizing: border-box; }
     html, body { margin: 0; }
     body {
-      background: var(--bg);
-      color: var(--ink);
-      font-family: "Nunito", system-ui, sans-serif;
-      font-size: 17px;
-      line-height: 1.7;
-      background-image:
-        radial-gradient(var(--shadow) 1px, transparent 1px);
-      background-size: 22px 22px;
+      background: var(--dark);
+      color: var(--light);
+      font-family: var(--font);
+      font-size: 18px;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
     }
 
-    .wrap {
-      max-width: 760px;
+    .inner {
+      max-width: 1100px;
       margin: 0 auto;
-      padding: 56px 16px 40px;
+      padding: 0 32px;
     }
 
-    /* Header */
-    header { text-align: center; margin-bottom: 40px; }
-    .gems { display: flex; justify-content: center; gap: 14px; margin-bottom: 22px; }
-    .gem {
-      width: 18px; height: 18px;
-      transform: rotate(45deg);
-      border: 3px solid var(--border);
-      animation: bob 2.4s ease-in-out infinite;
+    /* Top bar */
+    .top {
+      border-bottom: 1px solid var(--line-dark);
     }
-    .gem:nth-child(1) { background: var(--accent-2); }
-    .gem:nth-child(2) { background: var(--accent); animation-delay: .3s; }
-    .gem:nth-child(3) { background: var(--accent-3); animation-delay: .6s; }
-    @keyframes bob {
-      0%, 100% { transform: rotate(45deg) translateY(0); }
-      50% { transform: rotate(45deg) translateY(-6px); }
-    }
-    @media (prefers-reduced-motion: reduce) { .gem { animation: none; } }
-
-    h1 {
-      font-family: "Press Start 2P", monospace;
-      font-size: clamp(20px, 5vw, 32px);
-      line-height: 1.4;
-      margin: 0 0 14px;
-      letter-spacing: 1px;
-    }
-    .tagline { color: var(--muted); margin: 0; font-weight: 600; }
-
-    /* RPG-style dialog panel */
-    .panel {
-      background: var(--panel);
-      border: 4px solid var(--border);
-      border-radius: 6px;
-      box-shadow: 6px 6px 0 var(--shadow);
-      padding: 28px 28px 24px;
-      margin-bottom: 28px;
-      position: relative;
-    }
-    .panel h2 {
-      font-family: "Press Start 2P", monospace;
+    .top .inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 64px;
       font-size: 13px;
-      letter-spacing: 1px;
-      margin: 0 0 18px;
-      color: var(--accent);
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted-dark);
     }
-    .panel p { margin: 0 0 16px; }
-    .panel p:last-child { margin-bottom: 0; }
+    .top a { color: inherit; text-decoration: none; }
+    .top a:hover { color: var(--light); }
 
-    /* Interests */
-    .tags { display: flex; flex-wrap: wrap; gap: 10px; }
-    .tag {
-      border: 3px solid var(--border);
-      border-radius: 4px;
-      padding: 6px 12px;
-      font-weight: 800;
-      font-size: 15px;
-      background: var(--bg);
+    /* Hero */
+    .hero {
+      background:
+        linear-gradient(180deg, var(--dark) 0%, var(--dark-2) 100%);
+      position: relative;
+      overflow: hidden;
     }
-    .tag span { margin-right: 6px; }
+    .hero::before {
+      /* faint drafting grid */
+      content: "";
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(var(--line-dark) 1px, transparent 1px),
+        linear-gradient(90deg, var(--line-dark) 1px, transparent 1px);
+      background-size: 80px 80px;
+      opacity: 0.35;
+      mask-image: linear-gradient(180deg, transparent, #000 40%, transparent);
+      -webkit-mask-image: linear-gradient(180deg, transparent, #000 40%, transparent);
+      pointer-events: none;
+    }
+    .hero .inner {
+      position: relative;
+      padding-top: 140px;
+      padding-bottom: 120px;
+    }
+    .label {
+      font-size: 13px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--muted-dark);
+      margin: 0 0 28px;
+    }
+    h1 {
+      font-weight: 500;
+      font-size: clamp(48px, 9vw, 112px);
+      line-height: 0.95;
+      letter-spacing: -0.01em;
+      text-transform: uppercase;
+      margin: 0 0 36px;
+    }
+    h1 span { display: block; color: var(--muted-dark); }
+    .hero .lede {
+      max-width: 520px;
+      font-size: 20px;
+      color: #c9d1e6;
+      margin: 0;
+      padding-left: 20px;
+      border-left: 2px solid var(--accent);
+    }
+
+    /* Sections */
+    section { padding: 110px 0; }
+    .grid {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 48px;
+    }
+    .num {
+      font-size: 13px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      padding-top: 10px;
+      border-top: 1px solid currentColor;
+      align-self: start;
+    }
+    h2 {
+      font-weight: 500;
+      font-size: clamp(32px, 4.5vw, 52px);
+      line-height: 1.05;
+      text-transform: uppercase;
+      margin: 0 0 32px;
+    }
+    p { margin: 0 0 20px; }
+    p:last-child { margin-bottom: 0; }
+
+    .light { background: var(--light); color: var(--ink); }
+    .light .num { color: var(--muted-light); }
+    .light .body p { color: #2a3247; max-width: 680px; }
+
+    .dark { background: var(--dark); color: var(--light); }
+    .dark .num { color: var(--muted-dark); }
+
+    /* Interests list */
+    .list { list-style: none; margin: 0; padding: 0; }
+    .list li {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 24px;
+      padding: 22px 0;
+      border-top: 1px solid var(--line-dark);
+      font-size: clamp(22px, 3vw, 30px);
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+    .list li:last-child { border-bottom: 1px solid var(--line-dark); }
+    .list li small {
+      font-size: 14px;
+      letter-spacing: 0.08em;
+      text-transform: none;
+      color: var(--muted-dark);
+      text-align: right;
+    }
 
     /* Contact */
-    .contact a {
-      display: inline-block;
-      font-weight: 800;
+    .mail {
+      display: inline-flex;
+      align-items: center;
+      gap: 16px;
+      font-size: clamp(22px, 3.4vw, 36px);
       color: var(--ink);
       text-decoration: none;
-      border: 3px solid var(--border);
-      border-radius: 4px;
-      padding: 10px 16px;
-      background: var(--accent-3);
-      color: #2b2a33;
-      box-shadow: 4px 4px 0 var(--shadow);
-      transition: transform .1s, box-shadow .1s;
+      border-bottom: 2px solid var(--ink);
+      padding-bottom: 6px;
       word-break: break-all;
+      transition: color .2s, border-color .2s;
     }
-    .contact a:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--shadow); }
-    .contact a:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+    .mail .arrow { transition: transform .2s; }
+    .mail:hover { color: var(--accent); border-color: var(--accent); }
+    .mail:hover .arrow { transform: translateX(6px); }
+    .mail:focus-visible { outline: 2px solid var(--accent); outline-offset: 6px; }
 
-    footer {
-      text-align: center;
-      color: var(--muted);
-      font-size: 14px;
-      margin-top: 36px;
+    /* Footer */
+    footer { border-top: 1px solid var(--line-dark); }
+    footer .inner {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding-top: 28px;
+      padding-bottom: 28px;
+      font-size: 13px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted-dark);
     }
 
-    @media (max-width: 480px) {
-      .wrap { padding-top: 40px; }
-      .panel { padding: 22px 18px 18px; }
+    @media (max-width: 760px) {
+      .inner { padding: 0 16px; }
+      .hero .inner { padding-top: 90px; padding-bottom: 80px; }
+      section { padding: 72px 0; }
+      .grid { grid-template-columns: 1fr; gap: 24px; }
+      .num { max-width: 160px; }
+      .top .inner .links { display: none; }
+      .list li { flex-direction: column; gap: 4px; }
+      .list li small { text-align: left; }
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <div class="gems" aria-hidden="true">
-        <div class="gem"></div><div class="gem"></div><div class="gem"></div>
-      </div>
-      <h1>Kiyono Game Studio</h1>
-      <p class="tagline">Small games by Satoshi Kiyono</p>
-    </header>
 
-    <section class="panel">
-      <h2>&#9654; ABOUT</h2>
-      <p>I first got into programming as a hobby while studying and practicing architecture and construction engineering, writing scripts and plugins to streamline the software I used for personal and professional work. That grew into building web applications, both for my employer and for my own projects, and now I'm branching out into game development.</p>
-      <p>Outside of code, I've always been drawn to creative work: writing, performing and recording my own music, and drawing, painting and sculpting. Game development feels like a natural place where all of those interests meet. Combining my coding experience (and, more recently, AI tools) with my love of art and music, I set out to make games that are genuinely fun to play.</p>
-      <p>My biggest inspiration comes from the RPGs I grew up with on the Game Boy, SNES and N64.</p>
-    </section>
-
-    <section class="panel">
-      <h2>&#9654; INTERESTS</h2>
-      <div class="tags">
-        <div class="tag"><span aria-hidden="true">&#9000;</span>Code</div>
-        <div class="tag"><span aria-hidden="true">&#9835;</span>Music</div>
-        <div class="tag"><span aria-hidden="true">&#9998;</span>Drawing &amp; Painting</div>
-        <div class="tag"><span aria-hidden="true">&#9670;</span>Sculpting</div>
-        <div class="tag"><span aria-hidden="true">&#9733;</span>Retro RPGs</div>
-      </div>
-    </section>
-
-    <section class="panel contact">
-      <h2>&#9654; CONTACT</h2>
-      <p>Questions, feedback or just want to say hi?</p>
-      <p><a href="mailto:kiyonogamestudio@gmail.com">kiyonogamestudio@gmail.com</a></p>
-    </section>
-
-    <footer>&copy; <span id="year">2026</span> Kiyono Game Studio</footer>
+  <div class="top">
+    <div class="inner">
+      <span>Kiyono Game Studio</span>
+      <span class="links"><a href="#about">About</a> &nbsp;/&nbsp; <a href="#interests">Interests</a> &nbsp;/&nbsp; <a href="#contact">Contact</a></span>
+    </div>
   </div>
+
+  <header class="hero">
+    <div class="inner">
+      <p class="label">Independent games &mdash; Satoshi Kiyono</p>
+      <h1>Kiyono<span>Game Studio</span></h1>
+      <p class="lede">Small, thoughtful games built at the meeting point of code, music and art.</p>
+    </div>
+  </header>
+
+  <section id="about" class="light">
+    <div class="inner grid">
+      <div class="num">01 &mdash; About</div>
+      <div class="body">
+        <h2>From buildings<br>to games</h2>
+        <p>I first got into programming as a hobby while studying and practicing architecture and construction engineering, writing scripts and plugins to streamline the software I used for personal and professional work. That grew into building web applications, both for my employer and for my own projects, and now I'm branching out into game development.</p>
+        <p>Outside of code, I've always been drawn to creative work: writing, performing and recording my own music, and drawing, painting and sculpting. Game development feels like a natural place where all of those interests meet. Combining my coding experience (and, more recently, AI tools) with my love of art and music, I set out to make games that are genuinely fun to play.</p>
+        <p>My biggest inspiration comes from the RPGs I grew up with on the Game Boy, SNES and N64.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="interests" class="dark">
+    <div class="inner grid">
+      <div class="num">02 &mdash; Interests</div>
+      <div>
+        <ul class="list">
+          <li>Code <small>Scripts, plugins, web apps, games</small></li>
+          <li>Music <small>Writing, performing, recording</small></li>
+          <li>Art <small>Drawing, painting, sculpting</small></li>
+          <li>Retro RPGs <small>Game Boy, SNES, N64</small></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="light">
+    <div class="inner grid">
+      <div class="num">03 &mdash; Contact</div>
+      <div class="body">
+        <h2>Say hello</h2>
+        <p>Questions, feedback, or just want to talk games?</p>
+        <p style="margin-top:32px"><a class="mail" href="mailto:kiyonogamestudio@gmail.com">kiyonogamestudio@gmail.com <span class="arrow" aria-hidden="true">&rarr;</span></a></p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="inner">
+      <span>&copy; <span id="year">2026</span> Kiyono Game Studio</span>
+      <span>Built by hand</span>
+    </div>
+  </footer>
+
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
   </script>
